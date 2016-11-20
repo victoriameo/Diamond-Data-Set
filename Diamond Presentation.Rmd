@@ -1,0 +1,84 @@
+---
+title: "Diamonds"
+author: "Victoria Meo"
+date: "November 20, 2016"
+output: 
+  ioslides_presentation: 
+    smaller: yes
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Diamond Data Set: 
+##### Dataset containing the prices and other attributes of almost 54,000 diamonds
+##### Variables defined
+
+- Price = the price in US Dollars 
+- Carat = weight
+- cut = quality (fair, good, Very Good Premium, Ideal)
+- Colour = J worst, D best
+- Clarity - how cear (I1 (worst), SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best))
+- x = length in mm (0--10.74)
+- y = width in mm (0--58.9)
+- z = depth in mm (0--31.8)
+- depth = total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43--79)
+- table =  width of top relative to widest point (43--95)
+
+## Sample of the dataset
+
+```{r, echo=TRUE}
+library(ggplot2)
+data("diamonds")
+head(diamonds)
+```
+## Code for Interactive Table
+
+```{r, echo = TRUE, eval=TRUE}
+shinyApp(
+        shinyUI(pageWithSidebar(
+        headerPanel('Diamond Data Table'),
+        sidebarPanel(
+                checkboxGroupInput('show_vars',
+                                   'Colums in diamond table to be shown',
+                                   names(diamonds),
+                                   selected = names(diamonds)),
+                helpText('Note: You can choose what columns are shown in the table by checking the box.')
+        ),
+        mainPanel(
+                h3(textOutput("Diamonds")),
+                dataTableOutput("mytable1")
+        )
+)),
+shinyServer(function(input, output) {
+
+        # a large table, showing variables of the diamonds
+        output$mytable1 = renderDataTable({
+                library(ggplot2)
+                diamonds[, input$show_vars, drop = FALSE]
+        })
+
+
+})
+)
+```
+
+
+
+## Thank you 
+
+This presentation includes the definitions of the variables associated with the data set
+It also includes a sample of the data
+Finally is the code i used to create the slidy datable
+
+This link below will take you to the actual datatable
+
+https://victoriameo.shinyapps.io/DiamondDataProducts/
+
+Hope you enjoy
+
+
+
+
